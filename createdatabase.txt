@@ -1,0 +1,146 @@
+create database thousand_Programmers
+
+
+     CREATE TABLE users
+	(id_u int PRIMARY KEY  identity(1,1),
+	email nvarchar(50) NOT NULL,
+	password varchar(50) NOT NULL,
+	username nvarchar(50) NOT NULL	)  
+
+	CREATE TABLE roles
+	(id_r int PRIMARY KEY  identity(1,1),
+	role nvarchar(50) NOT NULL	)  
+
+	CREATE TABLE roles_user
+	(id_u int NOT NULL ,
+	id_r int  NOT NULL ,
+	datetime date NOT NULL,
+	isActivity binary NOT NULL,
+	CONSTRAINT pk_roles_user PRIMARY KEY (id_u,id_r),
+	CONSTRAINT  FK_roles_user_user FOREIGN KEY	
+   (id_u) REFERENCES users(id_u),
+   CONSTRAINT  FK_roles_user_roles FOREIGN KEY	
+   (id_r) REFERENCES roles(id_r))
+
+   	CREATE TABLE trainee
+	(id_t int PRIMARY KEY  identity(1,1) ,
+	id_u int  NOT NULL ,
+	name nvarchar(50) NOT NULL,
+	universityID int  NOT NULL ,
+	date_birth date NOT NULL,
+    phone  varchar(50) NOT NULL,
+	CONSTRAINT  FK_trainee_user FOREIGN KEY	
+   (id_u) REFERENCES users(id_u))
+
+
+    	CREATE TABLE teacher
+	(id_te int PRIMARY KEY  identity(1,1) ,
+	id_u int  NOT NULL ,
+	name nvarchar(50) NOT NULL,
+	date_birth date NOT NULL,
+    phone  varchar(50) NOT NULL,
+	CONSTRAINT  FK_teacer_user FOREIGN KEY	
+   (id_u) REFERENCES users(id_u))
+
+   	CREATE TABLE homeWorks
+	(id_h int PRIMARY KEY  identity(1,1) ,
+	id_t int  NOT NULL ,
+	id_te int  NOT NULL ,
+	task nvarchar(50) NOT NULL,
+	degree varchar(50) NOT NULL,
+	comment nvarchar(50) NOT NULL,
+	startdate date NOT NULL,
+	enddate date NOT NULL,
+	CONSTRAINT  FK_homeWorks_teacher FOREIGN KEY	
+   (id_te) REFERENCES teacher(id_te),
+   CONSTRAINT  FK_homeWorks_trainee FOREIGN KEY	
+   (id_t) REFERENCES trainee(id_t) )
+
+      	CREATE TABLE experience
+	(id_exp int PRIMARY KEY  identity(1,1) ,
+	id_t int  NOT NULL ,
+	company nvarchar(50) NOT NULL,
+	startdate date NOT NULL,
+	enddate date NOT NULL,
+	CONSTRAINT  FK_experience_trainee FOREIGN KEY	
+   (id_t) REFERENCES trainee(id_t))
+
+      	CREATE TABLE companies
+	(id_com int PRIMARY KEY  identity(1,1) ,
+	id_t int  NOT NULL ,
+	name nvarchar(50) NOT NULL,
+	startdate date NOT NULL,
+	CONSTRAINT  FK_companies_trainee FOREIGN KEY	
+   (id_t) REFERENCES trainee(id_t))
+
+      	CREATE TABLE certificate
+	(id_cer int PRIMARY KEY  identity(1,1) ,
+	id_t int  NOT NULL ,
+	certificate nvarchar(50) NOT NULL,
+	donor nvarchar(50) NOT NULL,
+	average nvarchar(50) NOT NULL,
+	grantDate date NOT NULL,
+	CONSTRAINT  FK_certificate_trainee FOREIGN KEY	
+   (id_t) REFERENCES trainee(id_t))
+	 
+	   	CREATE TABLE message
+	(sendId int NOT NULL ,
+	recvId int  NOT NULL ,
+	messagesText nvarchar(50) NOT NULL,
+	CONSTRAINT pk_message PRIMARY KEY (sendId,recvId),
+	CONSTRAINT  FK_sendId_trainee FOREIGN KEY	
+   (sendId) REFERENCES trainee(id_t),
+   CONSTRAINT  FK_recvId_trainee FOREIGN KEY	
+   (recvId) REFERENCES trainee(id_t)  )
+
+      	CREATE TABLE courses
+	(id_c int PRIMARY KEY  identity(1,1) ,
+	id_te int  NOT NULL ,
+	name nvarchar(50) NOT NULL,
+	startdate date NOT NULL,
+	enddate date NOT NULL,
+	CONSTRAINT  FK_courses_teacher FOREIGN KEY	
+   (id_te) REFERENCES teacher(id_te))
+
+        	CREATE TABLE exam
+	(id_ex int PRIMARY KEY  identity(1,1) ,
+	id_te int  NOT NULL ,
+	id_c int  NOT NULL ,
+	questions nvarchar(50) NOT NULL,
+	startdate date NOT NULL,
+	enddate date NOT NULL,
+	CONSTRAINT  FK_exam_teacher FOREIGN KEY	
+   (id_te) REFERENCES teacher(id_te),
+   CONSTRAINT  FK_exam_courses FOREIGN KEY	
+   (id_c) REFERENCES  courses(id_c) )
+
+    CREATE TABLE grades
+	(id_ex int  NOT NULL ,
+	id_t int  NOT NULL ,
+	degree nvarchar(50) NOT NULL,
+	CONSTRAINT pk_grades PRIMARY KEY (id_t,id_ex),
+	CONSTRAINT  FK_grades_exam FOREIGN KEY	
+   (id_ex) REFERENCES exam(id_ex),
+   CONSTRAINT  FK_grades_trainee FOREIGN KEY	
+   (id_t) REFERENCES  trainee(id_t) )
+
+   
+      	CREATE TABLE session
+	(id_s int PRIMARY KEY  identity(1,1) ,
+	id_c int  NOT NULL ,
+	CONSTRAINT  FK_session_courses FOREIGN KEY	
+   (id_c) REFERENCES courses(id_c))
+
+       	CREATE TABLE attendees
+	(id_a int PRIMARY KEY  identity(1,1) ,
+	id_t int  NOT NULL ,
+	id_s int  NOT NULL ,
+	isattendees binary NOT NULL,
+	date  date NOT NULL,
+	CONSTRAINT  FK_session_attendees FOREIGN KEY	
+   (id_s) REFERENCES session(id_s),
+   CONSTRAINT  FK_trainee_attendees FOREIGN KEY	
+   (id_t) REFERENCES  trainee(id_t) )
+
+
+
